@@ -123,7 +123,7 @@
 
 - (void)setThumbnailImage:(UIImage *)thumbnailImage
 {
-    if (_thumbnailImage != thumbnailImage) {
+    if (_thumbnailImage != thumbnailImage || self.thumbnailImageView.image != thumbnailImage) {
         self.thumbnailImageView.image = thumbnailImage;
         
         _thumbnailImage = thumbnailImage;
