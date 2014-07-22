@@ -90,16 +90,31 @@
 
 - (void)setMessageBubbleImageView:(UIImageView *)messageBubbleImageView
 {
+    self.messageBubbleContainerView.clipsToBounds = NO;
+    self.messageBubbleContainerView.superview.clipsToBounds = NO;
+    
     if (!messageBubbleImageView) {
         [_messageBubbleImageView removeFromSuperview];
         _messageBubbleImageView = nil;
         return;
     }
     
-    if (_messageBubbleImageView) {
-        _messageBubbleImageView.image = messageBubbleImageView.image;
-        return;
-    }
+    //    if (_messageBubbleImageView) {
+//    [_messageBubbleImageView.image setTranslatesAutoresizingMaskIntoConstraints:NO];
+//        _messageBubbleImageView.image = messageBubbleImageView.image;
+//        _messageBubbleImageView.bounds = self.messageBubbleContainerView.bounds;
+    //        self.thumbnailImageView.bounds = self.messageBubbleContainerView.bounds;
+//    [_messageBubbleImageView jsq_pinAllEdgesOfSubview:messageBubbleImageView];
+//        _messageBubbleImageView.backgroundColor = [UIColor blueColor];
+//        [self setNeedsUpdateConstraints];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self applyMask];
+//        });
+//        return;
+//    }
+    
+    [_messageBubbleImageView removeFromSuperview];
+    _messageBubbleImageView = nil;
     
     messageBubbleImageView.frame = CGRectMake(0.0f,
                                               0.0f,
