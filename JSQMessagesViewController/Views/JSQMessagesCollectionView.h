@@ -27,7 +27,7 @@
 @protocol JSQMessageData;
 @protocol JSQMessagesActivityIndicator;
 
-typedef void (^JSQMessagesCollectionViewDataSourceCompletionBlock)(UIImage *thumbnail);
+typedef void (^JSQMessagesCollectionViewDataSourceCompletionBlock)(UIImage *thumbnail, BOOL animated);
 
 /**
  *  An object that adopts the `JSQMessagesCollectionViewDataSource` protocol is responsible for providing the data and views

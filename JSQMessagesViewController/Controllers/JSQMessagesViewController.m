@@ -54,7 +54,7 @@ static inline void JSQMessagesCollectionViewCellAnimateDisplayBlock(UIImageView 
     if (duration > 0.f) {
         [UIView transitionWithView:mediaImageView.superview
                           duration:duration
-                           options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionAllowUserInteraction
+                           options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState
                         animations:^{
                             mediaImageView.image = thumbnail;
                         } completion:nil];
@@ -466,8 +466,12 @@ handleIncomingPhotoMessageWithMessageData:(id<JSQMessageData>)messageData
             
             [collectionView.dataSource collectionView:collectionView
                                  wantsThumbnailForURL:[messageData sourceURL]
-                 thumbnailImageViewForItemAtIndexPath:indexPath completionBlock:^(UIImage *thumbnail) {
-                     JSQMessagesCollectionViewCellAnimateDisplayBlock(incomingPhotoCell.thumbnailImageView, thumbnail, .3f);
+                 thumbnailImageViewForItemAtIndexPath:indexPath completionBlock:^(UIImage *thumbnail, BOOL animated) {
+                     // Check if the cell now is someone else's.
+                     if (![incomingPhotoCell.indexPath isEqual:indexPath]) {
+                         return;
+                     }
+                     JSQMessagesCollectionViewCellAnimateDisplayBlock(incomingPhotoCell.thumbnailImageView, thumbnail, (animated?.3f:0));
                      [incomingPhotoCell.activityIndicatorView stopAnimation];
                  }];
         }
@@ -520,8 +524,12 @@ handleOutgoingPhotoMessageWithMessageData:(id<JSQMessageData>)messageData
             [outgoingPhotoCell.activityIndicatorView startAnimation];
             [collectionView.dataSource collectionView:collectionView
                                  wantsThumbnailForURL:[messageData sourceURL]
-                 thumbnailImageViewForItemAtIndexPath:indexPath completionBlock:^(UIImage *thumbnail) {
-                     JSQMessagesCollectionViewCellAnimateDisplayBlock(outgoingPhotoCell.thumbnailImageView, thumbnail, .3f);
+                 thumbnailImageViewForItemAtIndexPath:indexPath completionBlock:^(UIImage *thumbnail, BOOL animated) {
+                     // Check if the cell now is someone else's.
+                     if (![outgoingPhotoCell.indexPath isEqual:indexPath]) {
+                         return;
+                     }
+                     JSQMessagesCollectionViewCellAnimateDisplayBlock(outgoingPhotoCell.thumbnailImageView, thumbnail, (animated?.3f:0));
                      [outgoingPhotoCell.activityIndicatorView stopAnimation];
                  }];
         }
@@ -590,8 +598,8 @@ handleIncomingVideoMessageWithMessageData:(id<JSQMessageData>)messageData
                 
                 [collectionView.dataSource collectionView:collectionView
                                      wantsThumbnailForURL:[messageData sourceURL]
-                     thumbnailImageViewForItemAtIndexPath:indexPath completionBlock:^(UIImage *thumbnail) {
-                         JSQMessagesCollectionViewCellAnimateDisplayBlock(incomingVideoCell.thumbnailImageView, thumbnail, .3f);
+                     thumbnailImageViewForItemAtIndexPath:indexPath completionBlock:^(UIImage *thumbnail, BOOL animated) {
+                         JSQMessagesCollectionViewCellAnimateDisplayBlock(incomingVideoCell.thumbnailImageView, thumbnail, (animated?.3f:0));
                          [incomingVideoCell.activityIndicatorView stopAnimation];
                      }];
             }
@@ -658,8 +666,8 @@ handleOutgoingVideoMessageWithMessageData:(id<JSQMessageData>)messageData
                 
                 [collectionView.dataSource collectionView:collectionView
                                      wantsThumbnailForURL:[messageData sourceURL]
-                     thumbnailImageViewForItemAtIndexPath:indexPath completionBlock:^(UIImage *thumbnail) {
-                         JSQMessagesCollectionViewCellAnimateDisplayBlock(outgoingVideoCell.thumbnailImageView, thumbnail, .3f);
+                     thumbnailImageViewForItemAtIndexPath:indexPath completionBlock:^(UIImage *thumbnail, BOOL animated) {
+                         JSQMessagesCollectionViewCellAnimateDisplayBlock(outgoingVideoCell.thumbnailImageView, thumbnail, (animated?.3f:0));
                          [outgoingVideoCell.activityIndicatorView stopAnimation];
                      }];
             }
@@ -825,6 +833,7 @@ handleOutgoingAudioMessageWithMessageData:(id<JSQMessageData>)messageData
     cell.cellTopLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForCellTopLabelAtIndexPath:indexPath];
     cell.messageBubbleTopLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:indexPath];
     cell.cellBottomLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForCellBottomLabelAtIndexPath:indexPath];
+    cell.indexPath = indexPath;
     
     CGFloat bubbleTopLabelInset = 60.0f;
     UIImageView *avatarImageView = [collectionView.dataSource collectionView:collectionView avatarImageViewForItemAtIndexPath:indexPath];

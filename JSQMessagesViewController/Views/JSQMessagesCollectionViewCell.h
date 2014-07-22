@@ -76,6 +76,12 @@
 @property (weak, nonatomic) id<JSQMessagesCollectionViewCellDelegate> delegate;
 
 /**
+ *  The last indexPath this cell was rendered at.
+ *  The default value is `nil`.
+ */
+@property (copy, nonatomic) NSIndexPath *indexPath;
+
+/**
  *  Returns the label that is pinned to the top of the cell.
  *  This label is most commonly used to display message timestamps.
  */
